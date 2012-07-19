@@ -1,5 +1,5 @@
-from __future__ import print_function
 from matplotlib.artist import Artist
+from matplotlib.transforms import Affine2D
 import cairo
 
 class RsvgArtist(Artist):
@@ -30,20 +30,23 @@ class RsvgArtist(Artist):
 
         trans = self.get_transform()
 
-        gc = renderer.new_gc()
+        ctx = renderer.gc.ctx
+        ctx.save()
 
-        mtx = trans.get_affine().get_matrix()
+        affine = trans.get_affine() + Affine2D().scale(1.0, -1.0).translate(0, renderer.height)
+        mtx = affine.get_matrix()
 
         matrix = cairo.Matrix(mtx[0, 0], mtx[0, 1], mtx[1, 0], mtx[1, 1], mtx[0, 2], mtx[1, 2])
         posx = float(self.convert_xunits(self._x))
-        posy = float(self.convert_yunits(-self._y))
+        posy = float(self.convert_yunits(self._y))
         matrix.translate(posx, posy)
 
-        matrix.scale(self._xscale, self._yscale)
+        matrix.scale(self._xscale, -self._yscale)
 
-        gc.ctx.transform(matrix)
+        ctx.transform(matrix)
 
-        self._svg.render_cairo(gc.ctx)
-        gc.restore()
+        self._svg.render_cairo(ctx)
+
+        ctx.restore()
 
         renderer.close_group('svg')
