@@ -6,7 +6,7 @@ class RsvgArtist(Artist):
     """
     Artist that renders an rsvg handle.
     """
-    def __init__(self, svg, x=0, y=0, xscale=1, yscale=1):
+    def __init__(self, svg, x=0, y=0, xscale=1, yscale=1, **kwargs):
         """
         Creates an object instance.
 
@@ -18,8 +18,9 @@ class RsvgArtist(Artist):
         self._y = y
         self._xscale = xscale
         self._yscale = yscale
+        self.update(kwargs)
 
-    def draw(self, renderer, *args, **kwargs):
+    def draw(self, renderer):
         if not self.get_visible(): return
 
         from matplotlib.backends.backend_cairo import RendererCairo
@@ -30,7 +31,10 @@ class RsvgArtist(Artist):
 
         trans = self.get_transform()
 
-        ctx = renderer.gc.ctx
+        gc = renderer.new_gc()
+        self._set_gc_clip(gc)
+
+        ctx = gc.ctx
         ctx.save()
 
         affine = trans.get_affine() + Affine2D().scale(1.0, -1.0).translate(0, renderer.height)
@@ -48,5 +52,6 @@ class RsvgArtist(Artist):
         self._svg.render_cairo(ctx)
 
         ctx.restore()
+        gc.restore()
 
         renderer.close_group('svg')
