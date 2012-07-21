@@ -10,15 +10,56 @@ class RsvgArtist(Artist):
         """
         Creates an object instance.
 
-        svg should be an object of class rsvg.Handle.
+        svg should be an instance of :class:`rsvg.Handle`.
         """
         Artist.__init__(self)
         self._svg = svg
-        self._x = x
-        self._y = y
-        self._xscale = xscale
-        self._yscale = yscale
+        self.set_x(x)
+        self.set_y(y)
+        self.set_xscale(xscale)
+        self.set_yscale(yscale)
         self.update(kwargs)
+
+    def set_svg(self, svg):
+        """Sets the image to display
+
+        ACCEPTS: an :class:`rsvg.Handle` instance
+        """
+        self._svg = svg
+
+    def set_x(self, x):
+        """Sets the x coordinate of the image
+
+        ACCEPTS: any number
+        """
+        self._x = x
+
+    def set_y(self, y):
+        """Sets the y coordinate of the image
+
+        ACCEPTS: any number
+        """
+        self._y = y
+
+    def set_xscale(self, xscale):
+        """Sets the scale of the x coordinate
+
+        ACCEPTS: any number
+        """
+        self._xscale = xscale
+
+    def set_yscale(self, yscale):
+        """Sets the scale of the y coordinate
+
+        ACCEPTS: any number
+        """
+        self._yscale = yscale
+
+    def get_svg(self): return self._svg
+    def get_x(self): return self._x
+    def get_y(self): return self._y
+    def get_xscale(self): return self._xscale
+    def get_yscale(self): return self._yscale
 
     def draw(self, renderer):
         if not self.get_visible(): return
