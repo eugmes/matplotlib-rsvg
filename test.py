@@ -21,7 +21,7 @@ scale = 1.0 / svg.props.width
 p.add_artist(rsvgartist.RsvgArtist(svg, -0.5, 0.5, scale, scale))
 
 p = plt.subplot(224, aspect='equal')
-p.set_title('A larger tiger over the grid')
+p.set_title('A larger transparent tiger over the grid')
 
 p.scatter(x, y, zorder=10)
 p.grid(zorder=5)
@@ -29,6 +29,6 @@ p.grid(zorder=5)
 svg = rsvg.Handle('tiger.svg')
 scale = 4.0 / svg.props.width
 
-p.add_artist(rsvgartist.RsvgArtist(svg, -1.5, 1.5, scale, scale, zorder=7))
+p.add_artist(rsvgartist.RsvgArtist(svg, -1.5, 1.5, scale, scale, zorder=7, alpha=0.9))
 
 plt.savefig('fig.pdf')
