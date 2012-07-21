@@ -90,7 +90,16 @@ class RsvgArtist(Artist):
 
         ctx.transform(matrix)
 
-        self._svg.render_cairo(ctx)
+        alpha = self.get_alpha()
+        if alpha == None:
+            self._svg.render_cairo(ctx)
+        else:
+            # TODO use a recording surface, when available
+            rec = cairo.PDFSurface(None, 100000, 100000)
+            rec_ctx = cairo.Context(rec)
+            self._svg.render_cairo(rec_ctx)
+            ctx.set_source_surface(rec)
+            ctx.paint_with_alpha(alpha)
 
         ctx.restore()
         gc.restore()
